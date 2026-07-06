@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:;">
+    <title>Facilitta Portaria</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <!-- Carregamento do Chart.js com fallback -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <!-- Utilitário de datas padronizado -->
+    <script src="./utils/dateUtilsClient.js"></script>
+</head>
+<body id="main-body">
+
+    <div id="login-screen" class="login-container">
+        <div class="login-left">
+            <h1>Bem vindo</h1>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Nome do usuário:</label>
+                    <input type="text" id="username" name="username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <div class="password-input-container">
+                        <input type="password" id="password" name="password" required autocomplete="current-password">
+                        <button type="button" id="toggle-password" class="password-toggle-btn" title="Mostrar/Ocultar senha">
+                            <img id="password-toggle-icon" src="./assets/versenha.svg" alt="Mostrar senha">
+                        </button>
+                    </div>
+                </div>
+                <div id="login-error-message" class="status-message status-error" style="display: none;"></div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Entrar</button>
+                </div>
+            </form>
+        </div>
+        <div class="login-right">
+            <img src="./assets/logo-login.png" alt="Logo" id="login-image">
+        </div>
+    </div>
+
+    <div id="app-container" class="app-container hidden">
+        <!-- Barra superior do app -->
+        <div id="app-topbar">
+            <div id="topbar-search-bar">
+                <input type="text" id="topbar-search-input" placeholder="Buscar.." autocomplete="on">
+                <img src="./assets/pesquisa.svg" alt="Buscar">
+            </div>
+            <div id="theme-toggle" class="theme-toggle" title="Alternar modo escuro">
+                <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                    <path class="sun-icon" d="M12 17C14.7614 17 17 14.7614 17 12C17 9.23858 14.7614 7 12 7C9.23858 7 7 9.23858 7 12C7 14.7614 9.23858 17 12 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="sun-icon" d="M12 1V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="sun-icon" d="M12 21V23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="sun-icon" d="M4.22 4.22L5.64 5.64" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="sun-icon" d="M18.36 18.36L19.78 19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="sun-icon" d="M1 12H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="sun-icon" d="M21 12H23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="sun-icon" d="M4.22 19.78L5.64 18.36" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="sun-icon" d="M18.36 5.64L19.78 4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="moon-icon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"/>
+                </svg>
+            </div>
+            <div id="notification-icon" class="notification-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" id="bell"><path fill="currentColor" d="M18,14.1V10c0-3.1-2.4-5.7-5.5-6V2.5C12.5,2.2,12.3,2,12,2s-0.5,0.2-0.5,0.5V4C8.4,4.3,6,6.9,6,10v4.1c-1.1,0.2-2,1.2-2,2.4v2C4,18.8,4.2,19,4.5,19h3.7c0.5,1.7,2,3,3.8,3c1.8,0,3.4-1.3,3.8-3h3.7c0.3,0,0.5-0.2,0.5-0.5v-2C20,15.3,19.1,14.3,18,14.1z M7,10c0-2.8,2.2-5,5-5s5,2.2,5,5v4H7V10z M13,20.8c-1.6,0.5-3.3-0.3-3.8-1.8h5.6C14.5,19.9,13.8,20.5,13,20.8z M19,18H5v-1.5C5,15.7,5.7,15,6.5,15h11c0.8,0,1.5,0.7,1.5,1.5V18z"></path></svg>
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="./assets/logosemletrass.svg" alt="Logo" class="sidebar-logo" />
+                <button id="sidebar-toggle" class="sidebar-toggle-btn" title="Encolher/Expandir menu">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="menu">
+                <button id="menu-modo-lote" class="menu-item">
+                    <img src="./assets/modoloteicon.svg" alt="Modo Lote" class="menu-icon" />
+                    <span class="menu-text">Modo lote</span>
+                </button>
+                <button id="menu-dashboard" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" id="apps" class="menu-icon"><path fill="currentColor" d="M21.5,13h-8.0005493C13.2234497,13.0001831,12.9998169,13.223999,13,13.5v8.0005493C13.0001831,21.7765503,13.223999,22.0001831,13.5,22h8.0006104C21.7765503,21.9998169,22.0001831,21.776001,22,21.5v-8.0006104C21.9998169,13.2234497,21.776001,12.9998169,21.5,13z M21,21h-7v-7h7V21z M10.5,2H2.4993896C2.2234497,2.0001831,1.9998169,2.223999,2,2.5v8.0005493C2.0001831,10.7765503,2.223999,11.0001831,2.5,11h8.0006104C10.7765503,10.9998169,11.0001831,10.776001,11,10.5V2.4993896C10.9998169,2.2234497,10.776001,1.9998169,10.5,2z M10,10H3V3h7V10z M10.5,13H2.4993896C2.2234497,13.0001831,1.9998169,13.223999,2,13.5v8.0005493C2.0001831,21.7765503,2.223999,22.0001831,2.5,22h8.0006104C10.7765503,21.9998169,11.0001831,21.776001,11,21.5v-8.0006104C10.9998169,13.2234497,10.776001,12.9998169,10.5,13z M10,21H3v-7h7V21z M21.5,2h-8.0005493C13.2234497,2.0001831,12.9998169,2.223999,13,2.5v8.0005493C13.0001831,10.7765503,13.223999,11.0001831,13.5,11h8.0006104C21.7765503,10.9998169,22.0001831,10.776001,22,10.5V2.4993896C21.9998169,2.2234497,21.776001,1.9998169,21.5,2z M21,10h-7V3h7V10z"></path></svg>
+                    <span class="menu-text">Dashboard</span>
+                </button>
+                <button id="menu-encomendas" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" id="box" class="menu-icon"><path fill="currentColor" d="M20.4896851,7.2872925c-0.0048828-0.0623169-0.0209351-0.1206665-0.0482178-0.177063c-0.0082397-0.0169678-0.0123291-0.0340576-0.0224609-0.0499878c-0.0391846-0.0621948-0.0886841-0.1184692-0.1553345-0.1598511l-8-4.9589844c-0.1616821-0.0996094-0.3656616-0.0996094-0.5273438,0l-8,4.9589844c-0.0136108,0.0084229-0.020813,0.0238647-0.0335083,0.0335083C3.6665649,6.9614258,3.6358643,6.9922485,3.6083374,7.0285034C3.5986328,7.0412598,3.5831909,7.0485229,3.574707,7.0621948c-0.006958,0.0112915-0.0072632,0.024231-0.0132446,0.0358276C3.5462036,7.1271973,3.5366821,7.1576538,3.5274048,7.1898193c-0.0094604,0.0332031-0.0176392,0.0651245-0.0200195,0.098938C3.5064087,7.3014526,3.5,7.3122559,3.5,7.3251953v9.3496094c-0.000061,0.1729736,0.0893555,0.3336182,0.2363281,0.4248047l8,4.9589844c0.0036011,0.0022583,0.0083618,0.0012817,0.0120239,0.003418c0.00354,0.0020752,0.0048828,0.0062866,0.0084839,0.0083008C11.8309937,22.1121826,11.9147949,22.1340332,12,22.1337891c0.0852051,0.0002441,0.1690063-0.0216064,0.2431641-0.0634766c0.0036011-0.0020142,0.0049438-0.0062256,0.0084839-0.0083008c0.0036621-0.0021362,0.0084229-0.0011597,0.0120239-0.003418l8-4.9589844c0.1468506-0.0913086,0.2362061-0.2518921,0.2363281-0.4248047V7.3251953C20.5,7.3116455,20.4907837,7.3006592,20.4896851,7.2872925z M11.5,20.7353516l-7-4.3388672V8.2236328l7,4.3378906V20.7353516z M12,11.6953125l-0.4055176-0.2513428L4.9492188,7.3251953L12,2.9541016l7.0507812,4.3710938l-5.1820679,3.211853L12,11.6953125z M19.5,16.3964844l-7,4.3388672v-8.1738281l7-4.3378906V16.3964844z"></path></svg>
+                    <span class="menu-text">Encomendas</span>
+                </button>
+                <button id="menu-moradores" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" id="users-alt" class="menu-icon"><path fill="currentColor" d="M17.3809204,13.3710938C18.934082,12.5227661,20,10.8944092,20,9c0-2.7614136-2.2385864-5-5-5c-0.140625,0.0025635-0.2809448,0.0146484-0.4199219,0.0361328l-0.1357422,0.0175781c-0.0012207,0.0001221-0.0024414,0.0002441-0.0036621,0.0004272c-0.2744141,0.0317383-0.4711304,0.2799072-0.4393921,0.5543213c0.0317993,0.2744141,0.2799683,0.4711304,0.5543823,0.4393921l0.1591797-0.0205078C14.8092041,5.0118408,14.9044189,5.0027466,15,5c2.2091675,0,4,1.7908325,4,4s-1.7908325,4-4,4c-0.276123,0-0.5,0.223877-0.5,0.5S14.723877,14,15,14c3.6798096,0.008728,6.7261353,2.8618774,6.9755859,6.5332031C21.9933472,20.7957764,22.2114258,20.9998169,22.4746094,21c0.0107422,0,0.0214844,0,0.0332031-0.0009766c0.2755127-0.0184937,0.4840088-0.2566528,0.4658203-0.5322266C22.7439575,17.0975952,20.4518433,14.3356323,17.3809204,13.3710938z M11.3793945,13.3696289C12.9319458,12.5209961,13.9978027,10.8936157,14,9c0-2.7614136-2.2385864-5-5-5S4,6.2385864,4,9c0,1.8936157,1.0650635,3.5214233,2.6171265,4.3700562c-3.0588379,0.9575195-5.3679199,3.706665-5.5907593,7.0967407c-0.0181885,0.2755737,0.1903076,0.5137329,0.4658203,0.5322266c0.0041504,0.0003052,0.0083618,0.0006104,0.0125122,0.0008545c0.2723999,0.0146484,0.5050659-0.1942749,0.5197144-0.4666748c0.2295532-3.5004272,3.0177612-6.2886963,6.5181885-6.5181885c3.8525391-0.2526245,7.1804199,2.6656494,7.4329834,6.5181885C15.9933472,20.7957764,16.2114258,20.9998169,16.4746094,21c0.0107422,0,0.0214844,0,0.0332031-0.0009766c0.2755737-0.0184937,0.4840088-0.2566528,0.4658203-0.5322266C16.7530518,17.1099243,14.4707031,14.3337402,11.3793945,13.3696289z M9,13c-2.2091675,0-4-1.7908325-4-4s1.7908325-4,4-4c2.208252,0.0021973,3.9978027,1.791748,4,4C13,11.2091675,11.2091675,13,9,13z"></path></svg>
+                    <span class="menu-text">Moradores</span>
+                </button>
+                <button id="menu-usuarios" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" id="user" class="menu-icon"><path fill="currentColor" d="M14.6650391,13.3672485C16.6381226,12.3842773,17.9974365,10.3535767,18,8c0-3.3137207-2.6862793-6-6-6S6,4.6862793,6,8c0,2.3545532,1.3595581,4.3865967,3.3334961,5.3690186c-3.6583862,1.0119019-6.5859375,4.0562134-7.2387695,8.0479736c-0.0002441,0.0013428-0.0004272,0.0026855-0.0006714,0.0040283c-0.0447388,0.272583,0.1399536,0.5297852,0.4125366,0.5745239c0.272522,0.0446777,0.5297241-0.1400146,0.5744629-0.4125366c0.624939-3.8344727,3.6308594-6.8403931,7.465332-7.465332c4.9257812-0.8027954,9.5697632,2.5395508,10.3725586,7.465332C20.9594727,21.8233643,21.1673584,21.9995117,21.4111328,22c0.0281372,0.0001831,0.0562134-0.0021362,0.0839844-0.0068359h0.0001831c0.2723389-0.0458984,0.4558716-0.303833,0.4099731-0.5761719C21.2677002,17.5184937,18.411377,14.3986206,14.6650391,13.3672485z M12,13c-2.7614136,0-5-2.2385864-5-5s2.2385864-5,5-5c2.7600708,0.0032349,4.9967651,2.2399292,5,5C17,10.7614136,14.7614136,13,12,13z"></path></svg>
+                    <span class="menu-text">Usuários</span>
+                </button>
+                <button id="menu-relatorios" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" id="file-check-alt" class="menu-icon"><path fill="currentColor" d="M13.5,21H7c-1.1040039-0.0014038-1.9985962-0.8959961-2-2V5c0.0014038-1.1040039,0.8959961-1.9985962,2-2h6v3.6669922C13.0016479,7.9547729,14.0452271,8.9983521,15.3330078,9H19v6.5c0,0.276123,0.223877,0.5,0.5,0.5s0.5-0.223877,0.5-0.5v-7c0-0.1326294-0.0526733-0.2597656-0.1464844-0.3535156l-6-6C13.7597656,2.0526733,13.6326294,2,13.5,2H7C5.3438721,2.0018311,4.0018311,3.3438721,4,5v14c0.0018311,1.6561279,1.3438721,2.9981689,3,3h6.5c0.276123,0,0.5-0.223877,0.5-0.5S13.776123,21,13.5,21z M14,3.7069702L18.2930298,8h-2.960022C14.5970459,7.9993896,14.0006104,7.4029541,14,6.6669922V3.7069702z M8.5,8C8.223877,8,8,8.223877,8,8.5S8.223877,9,8.5,9h2C10.776123,9,11,8.776123,11,8.5S10.776123,8,10.5,8H8.5z M22.8534546,17.1587524c-0.1918335-0.1986084-0.5083618-0.2041016-0.7069702-0.0122681L18.5,20.7929688l-1.6465454-1.6464233c-0.1937256-0.1871948-0.5009766-0.1871948-0.6947021,0c-0.1986694,0.1918335-0.2041016,0.5083618-0.0122681,0.7069702l2,2C18.2401123,21.9474487,18.3673706,22.0001831,18.5,22c0.1326294,0.0001221,0.2598267-0.0525513,0.3534546-0.1464844l4-4C23.0406494,17.659729,23.0406494,17.3525391,22.8534546,17.1587524z M13.5,16h-5C8.223877,16,8,16.223877,8,16.5S8.223877,17,8.5,17h5c0.276123,0,0.5-0.223877,0.5-0.5S13.776123,16,13.5,16z M15.5,12h-7C8.223877,12,8,12.223877,8,12.5S8.223877,13,8.5,13h7c0.276123,0,0.5-0.223877,0.5-0.5S15.776123,12,15.5,12z"></path></svg>
+                    <span class="menu-text">Relatórios</span>
+                </button>
+                <button id="menu-ajustes" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" id="cog" class="menu-icon"><path fill="currentColor" d="M12,8.5c-1.9329834,0-3.5,1.5670166-3.5,3.5s1.5670166,3.5,3.5,3.5c1.9320068-0.0023193,3.4976807-1.5679932,3.5-3.5C15.5,10.0670166,13.9329834,8.5,12,8.5z M12,14.5c-1.3807373,0-2.5-1.1192627-2.5-2.5s1.1192627-2.5,2.5-2.5c1.380127,0.0014648,2.4985352,1.119873,2.5,2.5C14.5,13.3807373,13.3807373,14.5,12,14.5z M21.1582031,10.0253906l-1.8867188-0.6289062c-0.0222168-0.0074463-0.0439453-0.0164185-0.0648804-0.0268555c-0.2470093-0.12323-0.3474121-0.4234009-0.2241821-0.6704102l0.8896484-1.7783203c0.0960083-0.1925659,0.0582275-0.4248657-0.09375-0.5771484l-2.1210938-2.1220703c-0.1524658-0.1516113-0.3845215-0.1893311-0.5771484-0.09375l-1.7792969,0.8896484c-0.0209961,0.010437-0.0426636,0.0194092-0.0648804,0.0268555c-0.2618408,0.0874023-0.5449829-0.0540771-0.6323853-0.315918l-0.6289062-1.8867188C13.90625,2.6377563,13.71521,2.5001831,13.5,2.5h-3c-0.21521-0.0001221-0.40625,0.1376343-0.4741821,0.3417969L9.3969116,4.7285156C9.3518677,4.8665161,9.24823,4.9776001,9.1137085,5.0322266c-0.1335449,0.057373-0.2857666,0.052002-0.414978-0.0146484L6.9204102,4.1279297c-0.1925049-0.0960693-0.4249268-0.0583496-0.5771484,0.09375L4.2216797,6.34375c-0.1522217,0.1521606-0.1900024,0.3846436-0.09375,0.5771484l0.8896484,1.7783203c0.0107422,0.0214233,0.0198975,0.0435791,0.0274658,0.0662842c0.086792,0.2616577-0.0548706,0.5441284-0.3165283,0.6309814l-1.8867188,0.6289062C2.6377563,10.09375,2.5001831,10.28479,2.5,10.5v3c0.0001831,0.21521,0.1377563,0.40625,0.3417969,0.4746094l1.8862305,0.6289062c0.0224609,0.0074463,0.0444336,0.0165405,0.0656128,0.0270996c0.2468872,0.12323,0.347168,0.4232788,0.223938,0.670166l-0.8896484,1.7783203c-0.0962524,0.1925049-0.0584717,0.4249878,0.09375,0.5771484l2.1216431,2.1220703c0.1523438,0.1519165,0.3845825,0.1896362,0.5771484,0.09375l1.7783203-0.8896484c0.1289673-0.067627,0.2816162-0.072998,0.4150391-0.0146484c0.1344604,0.0546265,0.2380981,0.1657104,0.2831421,0.3037109l0.6289062,1.8867188C10.093811,21.3623657,10.2848511,21.500061,10.5,21.5h3c0.21521-0.0001831,0.40625-0.1378174,0.4746094-0.3418579l0.6289062-1.8867188c0.0074463-0.0222168,0.0164185-0.0438843,0.0268555-0.0648804c0.12323-0.2470093,0.4234009-0.3474121,0.6704102-0.2241821l1.7792969,0.8896484c0.192688,0.0950928,0.4244995,0.0574341,0.5771484-0.09375l2.1210938-2.1220703c0.1519775-0.1522217,0.1897583-0.3845825,0.09375-0.5771484l-0.8896484-1.7783203c-0.0651855-0.1295776-0.0705566-0.2811279-0.0146484-0.414978c0.0546265-0.1342773,0.1657715-0.2375488,0.3037109-0.2822266l1.8867188-0.6289062C21.3622437,13.90625,21.4998169,13.71521,21.5,13.5v-3C21.4998169,10.28479,21.3622437,10.09375,21.1582031,10.0253906z M20.5,13.1396484l-1.5449219,0.5146484c-0.0671997,0.0223999-0.1326904,0.0495605-0.1960449,0.0811768c-0.7410889,0.3704224-1.0415649,1.2714844-0.6711426,2.0125732l0.7285156,1.4560547l-1.6113281,1.6123047l-1.4570312-0.7285156c-0.0639648-0.0320435-0.130127-0.0594482-0.197998-0.0820312c-0.7856445-0.2613525-1.6343994,0.1636353-1.895752,0.9492188L13.1396484,20.5h-2.2792969l-0.5151978-1.5449219c-0.0223389-0.0669556-0.0493774-0.1322021-0.0809326-0.1953125c-0.3702393-0.741394-1.2714233-1.0421753-2.0128174-0.671875l-1.4559937,0.7285156l-1.6118164-1.6123047l0.7285156-1.4560547c0.0314941-0.0631104,0.0585327-0.128418,0.0808716-0.1953125c0.2622681-0.7861938-0.1623535-1.6361084-0.9485474-1.8984375L3.5,13.1396484v-2.2792969l1.5449219-0.5145874c0.0666504-0.0222778,0.1317139-0.0492554,0.1945801-0.0806274c0.7416382-0.3701782,1.0427856-1.2714844,0.6726074-2.0131226L5.1835938,6.7958984l1.6118774-1.6123047l1.4559937,0.7285156C8.3145752,5.9436646,8.3798218,5.9707031,8.4467773,5.993042c0.7860718,0.2623901,1.6359863-0.1620483,1.8984375-0.9481201L10.8603516,3.5h2.2792969l0.5147095,1.5449219c0.022583,0.0678711,0.0499878,0.1340332,0.0820312,0.197998c0.3707275,0.7403564,1.2713623,1.039917,2.0117188,0.6691895l1.4569702-0.7285156l1.6113281,1.6123657l-0.7285156,1.4560547c-0.0320435,0.0639038-0.0594482,0.1300659-0.0820312,0.197937c-0.2613525,0.7856445,0.1636353,1.6343384,0.9492188,1.895752L20.5,10.8603516V13.1396484z"></path></svg>
+                    <span class="menu-text">Ajustes</span>
+                </button>
+            </div>
+            <div class="sidebar-footer">
+                <button id="logout-button" class="Btn">
+                    <div class="sign">
+                        <svg viewBox="0 0 512 512">
+                            <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
+                        </svg>
+                    </div>
+                    <div class="text">Sair</div>
+                </button>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <!-- Painel de Encomendas -->
+            <div id="encomendas-content">
+                <!-- ... conteúdo das encomendas ... -->
+            </div>
+
+            <!-- Painel de Moradores -->
+            <div id="moradores-content" style="display:none">
+                <h2>Gerenciar moradores</h2>
+                
+                <div class="topbar-search-bar-style">
+                    <input type="text" id="searchResidentInput" placeholder="Buscar morador..." autocomplete="on">
+                    <img src="./assets/pesquisa.svg" alt="Buscar">
+                </div>
+
+                <button id="btnImportarMoradores" class="btn-importar-moradores">
+                    Importar moradores (CSV)
+                </button>
+                <input type="file" id="inputCsvMoradores" accept=".csv"/>
+                <!-- ... resto do conteúdo dos moradores ... -->
+            </div>
+
+            <!-- Dashboard -->
+            <div id="dashboard-content">
+                <!-- Dashboard content will be dynamically generated by renderer.js -->
+            </div>
+
+            <!-- Ajustes -->
+            <div id="ajustes-content" style="display:none">
+                <div class="ajustes-placeholder">
+                    <h2>Configurações</h2>
+                    <p>Esta seção está sendo preparada para novas funcionalidades.</p>
+                    <p>Em breve, você poderá configurar diferentes aspectos do sistema aqui.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modais e outros conteúdos abaixo -->
+    <div id="modal-cadastro-encomenda" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-encomenda-title">Cadastrar encomenda</h2>
+            <form id="form-cadastro-encomenda">
+                <input type="hidden" id="encomenda-id" name="encomendaId">
+                <div class="form-group has-validation">
+                    <label for="morador">Morador:</label>
+                    <input type="text" id="morador" name="morador" required autocomplete="off" placeholder="Digite para buscar...">
+                    <svg class="validation-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
+                        <path d="M12,11.5c2.2,0,4-1.8,4-4s-1.8-4-4-4s-4,1.8-4,4S9.8,11.5,12,11.5z M23.7,9.1C23.7,9.1,23.7,9.1,23.7,9.1c-0.4-0.4-1-0.4-1.4,0l0,0l-2,2l-0.6-0.6c-0.4-0.4-1-0.4-1.4,0c-0.4,0.4-0.4,1,0,1.4l1.3,1.3c0.4,0.4,1,0.4,1.4,0l0,0l2.7-2.7C24.1,10.1,24.1,9.5,23.7,9.1z M12,13c-3.7,0-6.9,2.7-7.4,6.4c-0.1,0.5,0.3,1.1,0.9,1.1c0,0,0.1,0,0.1,0h12.8c0.6,0,1-0.4,1-1c0,0,0-0.1,0-0.1C18.9,15.7,15.7,13,12,13z"></path>
+                    </svg>
+                    <div id="morador-suggestions" class="suggestions-list"></div>
+                </div>
+                <div class="form-group form-row">
+                    <div class="form-subgroup">
+                        <label for="quantidade">Quantidade:</label>
+                        <input type="number" id="quantidade" name="quantidade" required value="1" min="1">
+                    </div>
+                    <div class="form-subgroup">
+                        <label for="data">Data de recebimento:</label>
+                        <input type="date" id="data" name="data" required>
+                    </div>
+                    <div class="form-subgroup">
+                        <label for="hora">Hora do reecebimento:</label>
+                        <input type="time" id="hora" name="hora" required>
+                    </div>
+                </div>
+                <div class="form-group has-validation">
+                    <label for="porteiro">Porteiro que recebeu:</label>
+                    <input type="text" id="porteiro" name="porteiro" required autocomplete="off" placeholder="Digite para buscar...">
+                    <svg class="validation-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
+                        <path d="M12,11.5c2.2,0,4-1.8,4-4s-1.8-4-4-4s-4,1.8-4,4S9.8,11.5,12,11.5z M23.7,9.1C23.7,9.1,23.7,9.1,23.7,9.1c-0.4-0.4-1-0.4-1.4,0l0,0l-2,2l-0.6-0.6c-0.4-0.4-1-0.4-1.4,0c-0.4,0.4-0.4,1,0,1.4l1.3,1.3c0.4,0.4,1,0.4,1.4,0l0,0l2.7-2.7C24.1,10.1,24.1,9.5,23.7,9.1z M12,13c-3.7,0-6.9,2.7-7.4,6.4c-0.1,0.5,0.3,1.1,0.9,1.1c0,0,0.1,0,0.1,0h12.8c0.6,0,1-0.4,1-1c0,0,0-0.1,0-0.1C18.9,15.7,15.7,13,12,13z"></path>
+                    </svg>
+                    <div id="porteiro-suggestions" class="suggestions-list"></div>
+                </div>
+                <div class="form-group">
+                    <label for="observacoes">Observações:</label>
+                    <textarea id="observacoes" name="observacoes" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="btn-cancelar-encomenda-modal" class="btn-secondary">Cancelar</button>
+                    <button type="submit" id="btn-salvar-encomenda" class="btn-primary">Salvar Encomenda</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-cadastro-morador" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-morador-title">Cadastrar morador</h2>
+            <form id="form-cadastro-morador">
+                <input type="hidden" id="morador-id" name="moradorId">
+                <div class="form-group">
+                    <label for="morador-nome">Nome completo:</label>
+                    <input type="text" id="morador-nome" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="morador-telefone">Telefone:</label>
+                    <input type="tel" id="morador-telefone" name="telefone" placeholder="(Opcional)">
+                </div>
+                <div class="form-group">
+                    <label for="morador-rua">Rua:</label>
+                    <input type="text" id="morador-rua" name="rua" required>
+                </div>
+                <div class="form-group form-row">
+                    <div class="form-subgroup">
+                        <label for="morador-numero">Número:</label>
+                        <input type="text" id="morador-numero" name="numero" required>
+                    </div>
+                    <div class="form-subgroup">
+                        <label for="morador-bloco">Bl/QD:</label>
+                        <input type="text" id="morador-bloco" name="bloco">
+                    </div>
+                    <div class="form-subgroup">
+                        <label for="morador-apartamento">AP/LT:</label>
+                        <input type="text" id="morador-apartamento" name="apartamento" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="morador-observacoes">Observações:(Opcional)</label>
+                    <textarea id="morador-observacoes" name="observacoes" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="btn-cancelar-morador-modal" class="btn-secondary">Cancelar</button>
+                    <button type="submit" id="btn-salvar-morador" class="btn-primary">Salvar Morador</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-cadastro-usuario" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-usuario-title">Cadastrar usuário</h2>
+            <form id="form-cadastro-usuario">
+                <input type="hidden" id="usuario-id" name="usuarioId">
+                <div class="form-group">
+                    <label for="usuario-nome">Nome:</label>
+                    <input type="text" id="usuario-nome" name="nome" required autocomplete="username">
+                    <small>Usado para entrar no sistema e como nome exibido.</small>
+                </div>
+                <div class="form-group">
+                    <label for="usuario-email">Email:</label>
+                    <input type="email" id="usuario-email" name="email" placeholder="(Opcional)">
+                </div>
+                <div class="form-group">
+                    <label for="usuario-nivel-acesso">Nível de acesso:</label>
+                    <select id="usuario-nivel-acesso" name="nivelAcesso" required>
+                        <option value="porteiro">Porteiro</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group" id="grupo-status" style="display: none;">
+                    <label for="usuario-status">Status:</label>
+                    <select id="usuario-status" name="usuario-status">
+                        <option value="Ativo" selected>Ativo</option>
+                        <option value="Inativo">Inativo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="usuario-senha">Senha:</label>
+                    <input type="password" id="usuario-senha" name="senha" required autocomplete="new-password">
+                    <small>Mínimo 6 caracteres. Deixe em branco na edição para não alterar.</small>
+                </div>
+                <div class="form-group">
+                    <label for="usuario-senha-confirm">Confirmar senha:</label>
+                    <input type="password" id="usuario-senha-confirm" name="senhaConfirm" required autocomplete="new-password">
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="btn-cancelar-usuario-modal" class="btn-secondary">Cancelar</button>
+                    <button type="submit" id="btn-salvar-usuario" class="btn-primary">Salvar usuário</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-entrega-encomenda" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-entrega-title">Registrar entrega de encomenda</h2>
+            <form id="form-entrega-encomenda">
+                <input type="hidden" id="entrega-encomenda-id" name="entregaEncomendaId">
+                <div class="form-group">
+                    <label for="entrega-morador-info">Encomenda para:</label>
+                    <input type="text" id="entrega-morador-info" name="entregaMoradorInfo" readonly disabled>
+                </div>
+                <div class="form-group has-validation">
+                    <label for="entrega-porteiro">Porteiro que entregou:</label>
+                    <input type="text" id="entrega-porteiro" name="entregaPorteiro" required autocomplete="off" placeholder="Digite para buscar o porteiro...">
+                    <svg class="validation-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
+                        <path d="M12,11.5c2.2,0,4-1.8,4-4s-1.8-4-4-4s-4,1.8-4,4S9.8,11.5,12,11.5z M23.7,9.1C23.7,9.1,23.7,9.1,23.7,9.1c-0.4-0.4-1-0.4-1.4,0l0,0l-2,2l-0.6-0.6c-0.4-0.4-1-0.4-1.4,0c-0.4,0.4-0.4,1,0,1.4l1.3,1.3c0.4,0.4,1,0.4,1.4,0l0,0l2.7-2.7C24.1,10.1,24.1,9.5,23.7,9.1z M12,13c-3.7,0-6.9,2.7-7.4,6.4c-0.1,0.5,0.3,1.1,0.9,1.1c0,0,0.1,0,0.1,0h12.8c0.6,0,1-0.4,1-1c0,0,0-0.1,0-0.1C18.9,15.7,15.7,13,12,13z"></path>
+                    </svg>
+                    <div id="entrega-porteiro-suggestions" class="suggestions-list"></div>
+                </div>
+                <div class="form-group form-row">
+                    <div class="form-subgroup">
+                        <label for="entrega-data">Data da entrega:</label>
+                        <input type="date" id="entrega-data" name="entregaData" required>
+                    </div>
+                    <div class="form-subgroup">
+                        <label for="entrega-hora">Hora da entrega:</label>
+                        <input type="time" id="entrega-hora" name="entregaHora" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="entrega-retirado-por">Para quem você entregou?</label>
+                    <input type="text" id="entrega-retirado-por" name="entregaRetiradoPor" placeholder="Nome de quem retirou (se não o morador)">
+                </div>
+                <div class="form-group">
+                    <label for="entrega-observacoes">Observações da entrega (Opcional):</label>
+                    <textarea id="entrega-observacoes" name="entregaObservacoes" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="btn-cancelar-entrega-modal" class="btn-secondary">Cancelar</button>
+                    <button type="submit" id="btn-confirmar-entrega" class="btn-primary">Confirmar Entrega</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
+
