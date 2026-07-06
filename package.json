@@ -1,0 +1,79 @@
+{
+  "name": "facilitta-portaria",
+  "productName": "FacilittaPortaria",
+  "version": "1.0.0",
+  "description": "Sistema de Controle de Encomendas para Condomínios - Facilitta Portaria",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\"",
+    "build-for-installer": "electron-forge package --platform=win32 --arch=x64",
+    "create-installer": "powershell -ExecutionPolicy Bypass -File scripts/create-installer.ps1",
+    "dist": "electron-builder",
+    "dist-win": "electron-builder --win"
+  },
+  "keywords": [
+    "encomendas",
+    "condominio",
+    "portaria",
+    "sistema"
+  ],
+  "author": {
+    "name": "Facilitta Sistemas",
+    "email": "contato@facilitta.com.br"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.5",
+    "cors": "^2.8.5",
+    "csv-parse": "^5.6.0",
+    "dotenv": "^16.6.1",
+    "electron-squirrel-startup": "^1.0.1",
+    "express": "^4.21.2",
+    "framer-motion": "^12.23.0",
+    "pdfkit": "^0.17.1",
+    "pdfkit-table": "^0.1.99",
+    "pg": "^8.15.6",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.8.0",
+    "@electron-forge/maker-deb": "^7.8.0",
+    "@electron-forge/maker-rpm": "^7.8.0",
+    "@electron-forge/maker-squirrel": "^7.8.0",
+    "@electron-forge/maker-zip": "^7.8.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.8.0",
+    "@electron-forge/plugin-fuses": "^7.8.0",
+    "@electron/fuses": "^1.8.0",
+    "electron": "36.0.1",
+    "electron-builder": "^26.0.12",
+    "electron-reload": "^2.0.0-alpha.1"
+  },
+  "config": {},
+  "build": {
+    "appId": "com.facilitta.portaria",
+    "productName": "FacilittaPortaria",
+    "directories": {
+      "output": "out"
+    },
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "src/assets/icone-app.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
+  }
+}
